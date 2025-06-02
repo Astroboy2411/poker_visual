@@ -769,3 +769,4 @@ if __name__ == '__main__':
     # Luego abre tu navegador en http://127.0.0.1:5000/
     # debug=True recarga automáticamente el servidor y muestra errores detallados.
     app.run(debug=True)
+

@@ -1,0 +1,394 @@
+:root {
+    /* === Colores de Fondo === */
+    --color-background-dark: #1a1a1a;
+    --color-section-background: #333;
+    --color-header-background: #2c3e50;
+    --color-card-background: #1c1c1c;
+
+    /* === Colores de Texto === */
+    --color-text-light: #e0e0e0;
+    --color-text-dark: #eee;
+    --color-text-placeholder: #aaa;
+    --color-text-subtle: #888;
+
+    /* === Colores Temáticos === */
+    --color-primary-accent: #f39c12;     /* Naranja para títulos */
+    --color-secondary-accent: #2ecc71;   /* Verde para montos */
+    --color-info: #3498db;               /* Azul para mensajes de ronda */
+    --color-warning: #f1c40f;            /* Amarillo para mensajes finales */
+    --color-danger: #e74c3c;             /* Rojo para errores/suits rojos */
+    --color-purple: #8e44ad;             /* Púrpura para acciones de CPU */
+    --color-gold: gold;                  /* Borde de cartas */
+
+    /* === Botones === */
+    --button-primary: #27ae60;
+    --button-primary-hover: #2ecc71;
+    --button-secondary: #555;
+    --button-secondary-hover: #777;
+    --button-danger: #c0392b;
+    --button-danger-hover: #e74c3c;
+
+    /* === Espaciado === */
+    --spacing-xs: 5px;
+    --spacing-sm: 8px;
+    --spacing-md: 15px;
+    --spacing-lg: 20px;
+    --spacing-xl: 25px;
+    --spacing-xxl: 30px;
+
+    /* === Bordes y Sombras === */
+    --border-radius-sm: 6px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 10px;
+    --box-shadow-medium: 0 5px 15px rgba(0, 0, 0, 0.5);
+    --card-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+
+    /* === Tamaños de Fuente === */
+    --font-size-base: 1em;
+    --font-size-sm: 0.8em;
+    --font-size-md: 1.05em;
+    --font-size-lg: 1.1em;
+    --font-size-xl: 1.3em;
+    --font-size-card: 26px;
+}
+
+
+/* --- Estilos Generales del Cuerpo --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-background-dark);
+    color: var(--color-text-light);
+    text-align: center;
+    margin: 0;
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; /* Asegura que el body ocupe toda la altura visible */
+    box-sizing: border-box; /* Incluye padding en el tamaño total */
+}
+
+/* --- Contenedores de Sección --- */
+.welcome-container, /* Nueva clase para la página de inicio */
+.game-header,      /* Renombrado de .header para página de juego */
+.game-board-container, /* Nuevo contenedor principal para el juego */
+.community-cards-section, /* Nueva clase para la sección de cartas comunitarias */
+.player-interaction-area, /* Nueva clase para la sección de jugador */
+.debug-info {
+    background-color: var(--color-section-background);
+    border-radius: var(--border-radius-lg);
+    margin: var(--spacing-md) auto;
+    padding: var(--spacing-xl);
+    box-shadow: var(--box-shadow-medium);
+    max-width: 900px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* --- Estilos del Encabezado (Página de Juego) --- */
+.game-header {
+    background-color: var(--color-header-background);
+    color: white;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: var(--spacing-xxl); /* Más espacio debajo del header */
+}
+
+/* --- Títulos --- */
+h1, h2, h3 {
+    color: var(--color-primary-accent);
+    margin-bottom: var(--spacing-md);
+}
+
+.welcome-title {
+    font-size: 2.5em; /* Título más grande para la bienvenida */
+    margin-bottom: var(--spacing-lg);
+}
+
+.welcome-tagline {
+    font-size: 1.2em;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-lg);
+}
+
+
+/* --- Información del Juego y Jugador --- */
+.player-stats p, .pot-info p, .bet-info p {
+    margin: var(--spacing-xs) 0; /* Espaciado más compacto para líneas de info */
+}
+
+.chips-amount, .pot-amount, .current-bet {
+    font-weight: bold;
+    color: var(--color-secondary-accent);
+}
+
+/* --- Mensajes Dinámicos --- */
+.game-messages {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+}
+
+.round-message {
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    color: var(--color-info);
+    margin-top: var(--spacing-md);
+}
+
+.error-message {
+    color: var(--color-danger);
+    font-weight: bold;
+    margin-top: var(--spacing-sm);
+    background-color: rgba(231, 76, 60, 0.1); /* Fondo sutil para errores */
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+}
+
+.cpu-action-message {
+    color: var(--color-purple);
+    font-style: italic;
+    margin-top: var(--spacing-sm);
+}
+
+.final-message {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    color: var(--color-warning);
+    margin-bottom: var(--spacing-lg);
+}
+
+.cpu-turn-message {
+    font-style: italic;
+    color: var(--color-text-subtle);
+}
+
+/* --- Separador Horizontal --- */
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0));
+    margin: var(--spacing-lg) 0;
+}
+
+/* --- Estilos de Cartas --- */
+.card {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 70px; /* Ligeramente más anchas */
+    height: 100px; /* Ligeramente más altas */
+    border: 2px solid var(--color-gold);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-card);
+    font-weight: bold;
+    margin: var(--spacing-xs);
+    background-color: var(--color-card-background);
+    box-shadow: var(--card-box-shadow);
+    flex-shrink: 0;
+}
+
+.red-suit {
+    color: var(--color-danger);
+}
+
+.black-suit {
+    color: var(--color-text-light);
+}
+
+.no-cards-message, .hidden-cards {
+    font-style: italic;
+    color: var(--color-text-subtle);
+    padding: var(--spacing-sm);
+    background-color: rgba(51, 51, 51, 0.5);
+    border-radius: var(--border-radius-sm);
+}
+
+
+.community-cards, .hand-cards {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm); /* Un poco más de espacio entre cartas */
+}
+
+/* --- Botones --- */
+button {
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-size: var(--font-size-md);
+    margin: var(--spacing-sm);
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+    min-width: 120px;
+    color: white; /* Color de texto por defecto para botones */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Clases específicas para botones */
+.action-button, .start-button {
+    background-color: var(--button-primary);
+}
+
+.action-button:hover, .start-button:hover {
+    background-color: var(--button-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.button-secondary {
+    background-color: var(--button-secondary);
+}
+
+.button-secondary:hover {
+    background-color: var(--button-secondary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.button-danger {
+    background-color: var(--button-danger);
+}
+
+.button-danger:hover {
+    background-color: var(--button-danger-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Inputs de Formulario --- */
+input[type="text"],
+input[type="number"] {
+    padding: 10px;
+    margin: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid #555;
+    background-color: #222;
+    color: var(--color-text-dark);
+    font-size: var(--font-size-base);
+    box-sizing: border-box; /* Asegura que padding no aumente el ancho total */
+}
+
+input::placeholder {
+    color: var(--color-text-placeholder);
+}
+
+/* --- Formularios --- */
+.name-input-form, .action-form, .new-round-form, .advance-form {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.form-group { /* Para agrupar label e input */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+    font-weight: bold;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-text-light);
+}
+
+.form-input { /* Estilo específico para input de formulario */
+    width: 250px; /* Ancho fijo para el input de nombre */
+    max-width: 100%;
+}
+
+.form-help-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    margin-top: var(--spacing-xs);
+}
+
+.bet-input { /* Estilo específico para el input de apuesta/subida */
+    width: 150px;
+    max-width: 100%;
+}
+
+
+/* --- Área de Interacción del Jugador --- */
+.player-actions {
+    margin-top: var(--spacing-lg);
+}
+
+/* Opciones de fin de juego */
+.game-end-options {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md); /* Espacio entre los formularios de fin de juego */
+}
+
+.game-end-options form {
+    margin-top: 0; /* Eliminar margen superior duplicado */
+}
+
+/* --- Información de Depuración --- */
+.debug-info {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    background-color: #222;
+    border: 1px dashed #555;
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-xxl);
+}
+
+.debug-info h3 {
+    color: var(--color-text-light);
+    border-bottom: 1px solid #555;
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+/* --- Estilos Responsivos Básicos --- */
+@media (max-width: 768px) {
+    .container, .game-header, .game-board-container, .player-interaction-area, .debug-info {
+        margin: var(--spacing-sm) auto;
+        padding: var(--spacing-lg);
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.4em;
+    }
+
+    .card {
+        width: 60px;
+        height: 90px;
+        font-size: 22px;
+    }
+
+    button {
+        min-width: unset; /* Permitir que los botones se ajusten */
+        padding: 10px 15px;
+        font-size: var(--font-size-base);
+    }
+
+    input[type="text"], input[type="number"] {
+        width: 100%; /* Ocupar todo el ancho disponible */
+        margin: var(--spacing-sm) 0;
+    }
+
+    .action-form, .new-round-form {
+        flex-direction: column; /* Apilar elementos en pantallas pequeñas */
+        gap: var(--spacing-sm);
+    }
+}

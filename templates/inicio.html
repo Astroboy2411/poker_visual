@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- === Metadatos Básicos === -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- === Título de la Página === -->
+    <title>Poker Py - Inicio</title>
+
+    <!-- === Enlace al archivo de estilos === -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <!-- === Contenedor Principal de Bienvenida === -->
+    <main class="welcome-container">
+        <!-- === Título y Eslogan === -->
+        <h1 class="welcome-title">¡BIENVENIDO A POKER PY!</h1>
+        <p class="welcome-tagline">Listo para desafiar a la CPU en una partida de póker?</p>
+
+        <!-- === Formulario de Ingreso de Nombre === -->
+        <form action="{{ url_for('iniciar_juego_post') }}" method="post" class="name-input-form">
+            <div class="form-group">
+                <label for="nombre" class="form-label">¿Cuál es tu nombre?</label>
+                <input type="text" id="nombre" name="nombre" class="form-input" placeholder="Introduce tu nombre aquí..." required aria-describedby="name-input-description">
+                <small id="name-input-description" class="form-help-text">Tu nombre se usará en el juego.</small>
+            </div>
+
+            <!-- === Mensaje de Error si existe === -->
+            {% if error %}
+                <p class="error-message" role="alert">{{ error }}</p>
+            {% endif %}
+
+            <!-- === Botón para Comenzar el Juego === -->
+            <button type="submit" class="start-button">Empezar a Jugar</button>
+        </form>
+    </main>
+</body>
+</html>

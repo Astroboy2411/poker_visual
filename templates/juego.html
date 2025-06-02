@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- === Metadatos Básicos === -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- === Título de la Página === -->
+    <title>Poker Py - Juego</title>
+
+    <!-- === Enlace al archivo de estilos === -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <!-- === Encabezado del Juego === -->
+    <header class="game-header">
+        <h1>Mesa de Póker</h1>
+
+        <!-- === Estadísticas de Jugadores === -->
+        <div class="player-stats" aria-live="polite">
+            <p>Fichas de {{ jugador.nombre }}: <span class="chips-amount">{{ jugador.fichas }}</span></p>
+            <p>Fichas de CPU: <span class="chips-amount">{{ maquina.fichas }}</span></p>
+            <p>Bote actual: <span class="pot-amount">{{ mesa.bote }}</span></p>
+            <p>Apuesta actual en ronda: <span class="current-bet">{{ apuesta_actual_ronda }}</span></p>
+        </div>
+
+        <!-- === Mensajes de la Ronda y Errores === -->
+        <div class="game-messages" aria-live="polite" aria-atomic="true">
+            {% if mensaje_ronda %}
+                <p class="round-message">{{ mensaje_ronda }}</p>
+            {% endif %}
+            {% if mensaje_error %}
+                <p class="error-message">{{ mensaje_error }}</p>
+            {% endif %}
+            {% if ultima_accion_cpu %}
+                <p class="cpu-action-message">Acción de la CPU: **{{ ultima_accion_cpu.upper() }}**</p>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- === Contenedor Principal del Tablero de Juego === -->
+    <main class="game-board-container">
+        <hr>
+
+        <!-- === Sección de Cartas Comunitarias === -->
+        <section class="community-cards-section">
+            <h2>Cartas Comunitarias ({{ ronda_nombre }}):</h2>
+            <div class="community-cards">
+                {% if mesa.cartas_comunitarias %}
+                    {% for carta in mesa.cartas_comunitarias %}
+                        <span class="card {{ 'red-suit' if carta.palo in ['♥', '♦'] else 'black-suit' }}" aria-label="{{ carta.valor }} de {{ carta.palo_texto }}">{{ carta.valor }}{{ carta.palo }}</span>
+                    {% endfor %}
+                {% else %}
+                    <span class="no-cards-message">Ninguna todavía.</span>
+                {% endif %}
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- === Sección de Interacción del Jugador === -->
+        <section class="player-interaction-area">
+            <h2>Tus cartas:</h2>
+            <div class="hand-cards">
+                {% for carta in jugador.mano %}
+                    <span class="card {{ 'red-suit' if carta.palo in ['♥', '♦'] else 'black-suit' }}" aria-label="{{ carta.valor }} de {{ carta.palo_texto }}">{{ carta.valor }}{{ carta.palo }}</span>
+                {% endfor %}
+            </div>
+
+            <!-- === Opciones al Finalizar Ronda o Juego === -->
+            {% if juego.estado_juego == "ronda_finalizada" or juego.estado_juego == "showdown" or juego.estado_juego == "ronda_terminada_por_retiro" %}
+                <div class="game-end-options">
+                    {% if juego.estado_juego == "showdown" %}
+                        <p class="final-message">¡El juego ha terminado! Ver el resultado arriba.</p>
+                    {% elif juego.estado_juego == "ronda_terminada_por_retiro" %}
+                        <p class="final-message">Ronda terminada por retiros. ¡El ganador se lleva el bote!</p>
+                    {% endif %}
+
+                    <!-- === Formulario para Nueva Ronda === -->
+                    <form action="{{ url_for('nueva_ronda') }}" method="post" class="new-round-form">
+                        <label for="semilla">Semilla para nueva ronda (opcional):</label>
+                        <input type="text" id="semilla" name="semilla" placeholder="Ej: 123" aria-describedby="semilla-help">
+                        <small id="semilla-help" class="form-help-text">Introduce un número para barajar las cartas de forma predecible.</small>
+                        <button type="submit">Jugar Otra Ronda</button>
+                    </form>
+
+                    <!-- === Botón para Volver al Inicio (Cambiar Nombre) === -->
+                    <form action="{{ url_for('index') }}" method="get">
+                        <button type="submit" class="button-secondary">Volver al inicio (cambiar nombre)</button>
+                    </form>
+                </div>
+
+            <!-- === Acciones del Jugador Durante la Ronda === -->
+            {% else %}
+                <div class="player-actions">
+                    <h3>¿Qué quieres hacer?</h3>
+
+                    {% if juego.es_turno_jugador_humano() %}
+                        <form action="{{ url_for('realizar_accion') }}" method="post" class="action-form">
+                            {% if apuesta_actual_ronda == 0 %}
+                                <button type="submit" name="accion" value="apostar" class="action-button">Apostar</button>
+                                <button type="submit" name="accion" value="pasar" class="action-button">Pasar</button>
+                            {% else %}
+                                <button type="submit" name="accion" value="igualar" class="action-button">Igualar</button>
+                                <button type="submit" name="accion" value="subir" class="action-button">Subir</button>
+                            {% endif %}
+                            <button type="submit" name="accion" value="retirarse" class="action-button button-danger">Retirarse</button>
+                            <input type="number" name="cantidad" placeholder="Cantidad (apostar/subir)" min="0" class="bet-input" aria-label="Cantidad para apostar o subir">
+                        </form>
+                    {% else %}
+                        <p class="cpu-turn-message">Espera, es el turno de la CPU...</p>
+                    {% endif %}
+
+                    <!-- === Botón para Avanzar Fase si corresponde === -->
+                    {% if juego._verificar_fin_ronda_apuestas() and juego.estado_juego != "showdown" and juego.estado_juego != "ronda_terminada_por_retiro" %}
+                        <form action="{{ url_for('avanzar_fase') }}" method="post" class="advance-form">
+                            <button type="submit" class="button-primary">Avanzar a la Siguiente Fase</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <!-- === Pie de Página con Información de Depuración === -->
+    <footer class="debug-info">
+        <hr>
+        <h3>Información de Depuración (solo para desarrollo):</h3>
+
+        <!-- === Mostrar Cartas de CPU si es Showdown === -->
+        <p>Cartas de CPU:
+            {% if juego.estado_juego == "showdown" %}
+                {% for carta in maquina.mano %}
+                    <span class="card {{ 'red-suit' if carta.palo in ['♥', '♦'] else 'black-suit' }}" aria-label="{{ carta.valor }} de {{ carta.palo_texto }}">{{ carta.valor }}{{ carta.palo }}</span>
+                {% endfor %}
+            {% else %}
+                <span class="hidden-cards">Ocultas</span>
+            {% endif %}
+        </p>
+
+        <p>Estado del Juego: **{{ juego.estado_juego }}**</p>
+        <p>Turno actual index: **{{ juego.turno_actual_index }}**</p>
+    </footer>
+</body>
+</html>
